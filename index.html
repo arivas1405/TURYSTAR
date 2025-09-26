@@ -144,72 +144,98 @@
             text-align: center;
         }
 
-        /* 6. ESTILO PARA LA IMPRESIÓN (AJUSTE FINAL PARA 6 CARTONES EN A4/CARTA) */
+        /* 6. ESTILO CORREGIDO Y OPTIMIZADO PARA LA IMPRESIÓN (6 cartones grandes, márgenes estrechos) */
         @media print {
-            body { 
+            
+            /* 1. Reset de Márgenes Estrechos */
+            body, html { 
+                /* Mantenemos un margen estrecho de 5mm alrededor de toda la página */
+                margin: 5mm !important; 
+                padding: 0 !important;
+                /* El tamaño de la fuente base ayuda a escalar el contenido */
+                font-size: 10pt; 
+                width: auto;
+                height: auto;
                 background-image: none; 
-                padding: 0; 
-                margin: 0;
-                display: block;
-                font-size: 10px; 
-                /* Forzamos el uso de grid para una distribución precisa */
-                display: grid;
-                grid-template-columns: repeat(2, 1fr); /* 2 columnas */
-                grid-template-rows: repeat(3, 1fr); /* 3 filas */
-                height: 100vh; /* Ocupa la altura de la página */
-                gap: 5mm; /* Espacio entre cartones */
-                padding: 5mm;
+                display: block; /* Deshacer el display: flex del modo web */
             }
             
-            /* Oculta lo innecesario */
+            /* Oculta los elementos que NO se deben imprimir */
             header, #data-input-container, #print-button-display { 
-                display: none; 
+                display: none !important; 
             }
             
+            /* 2. CLAVE: CONFIGURACIÓN DE LA REJILLA EN EL CONTENEDOR (#cards-container) */
             #cards-container { 
-                /* Se oculta el contenedor padre y usamos los hijos directamente en el body */
-                display: contents; 
+                /* Forzamos el contenedor a ocupar el espacio restante */
+                width: 100%;
+                /* Usamos 'vh' para que ocupe la altura restante después de los 5mm de margen */
+                height: 100vh; 
+                
+                /* Configuración de la rejilla (grid) para los 6 cartones */
+                display: grid;
+                grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual ancho */
+                grid-template-rows: repeat(2, 1fr); /* 2 filas de igual alto */
+                
+                /* Espacio mínimo entre los cartones */
+                gap: 3mm; 
+                
+                /* Desactivamos el flex-wrap de la vista web */
+                flex-wrap: nowrap; 
+                justify-content: unset;
+                align-items: unset;
+                padding: 0; 
             }
             
+            /* 3. Ajuste de Cada Cartón Individual (.bingo-card) */
             .bingo-card { 
-                width: 100%; /* Ocupa el 100% de la columna del grid */
-                height: 100%; /* Ocupa el 100% de la fila del grid */
-                margin: 0; 
+                /* Ocupa exactamente el espacio que le da la celda de la rejilla */
+                width: 100%; 
+                height: 100%; 
+                
+                margin: 0 !important; 
                 border-color: #000; 
                 box-shadow: none; 
                 page-break-inside: avoid; 
                 
-                /* Ajuste de GRID INTERNO del cartón */
+                /* Ajuste de GRID INTERNO del cartón para que las celdas sean más grandes */
                 grid-template-columns: repeat(5, 1fr);
-                grid-auto-rows: 1fr; 
+                grid-auto-rows: 1fr; /* Hace que las filas se estiren verticalmente */
             }
             
+            /* Ajuste de Fuente y Borde para impresión en blanco y negro */
             .bingo-header { 
-                background-color: #ccc !important; 
+                background-color: #ddd !important; 
                 color: #000 !important; 
-                font-size: 14px; /* Aumentado el tamaño de la letra BINGO para mejor lectura */
+                font-size: 12px; 
                 height: auto; 
-                padding: 2px 0;
+                padding: 1px 0;
             }
             
             .bingo-cell { 
                 border-color: #000; 
-                font-size: 14px; /* Aumentado el tamaño del número para mejor lectura */
-                padding: 1px;
+                font-size: 12px; 
+                min-height: auto;
             }
             
             .center-cell { 
                 background-color: #eee !important; 
                 color: #333 !important;
                 border: 1px solid #000 !important;
-                width: 90% !important; /* Más grande */
+                width: 90% !important; 
                 height: 90% !important;
-                font-size: 10px !important; 
+                font-size: 8px !important; 
             }
 
-            /* Aseguramos que solo los primeros 6 cartones se muestren en la primera página si se generan más */
+            /* 4. SALTO DE PÁGINA OBLIGATORIO */
+            /* Garantiza que SOLO 6 cartones salgan por página. */
+            .bingo-card:nth-child(6n) {
+                page-break-after: always;
+            }
+
+            /* Si generas MÁS de 6 cartones, los siguientes usarán el mismo formato */
             .bingo-card:nth-child(n+7) {
-                display: none;
+                display: grid; 
             }
         }
     </style>
