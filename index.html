@@ -32,7 +32,6 @@
         
         /* Estilo para el Logo */
         header img {
-            /* ¡CORRECCIÓN A LA RUTA DEL LOGO! (Asegúrate de que este archivo exista en tu repo) */
             max-width: 150px; 
             height: auto;
             margin-bottom: 10px;
@@ -45,8 +44,8 @@
             letter-spacing: 2px;
         }
         
-        /* 3. Formulario de Datos Simplificado */
-        #data-form-container { 
+        /* 3. Contenedor de Entrada de Datos */
+        #data-input-container { /* Renombrado de data-form-container a data-input-container */
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
@@ -54,23 +53,29 @@
             width: 100%;
             max-width: 400px;
             margin-bottom: 20px;
+            text-align: center; /* Centrar elementos internos */
         }
-        #data-form-container input, #data-form-container button {
-            width: 100%;
+        #data-input-container input {
+            width: calc(100% - 20px); /* Ajuste para padding */
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box; 
         }
-        #data-form-container button {
-            background-color: #FF5722; /* Naranja para el botón de acción */
+        #data-input-container .action-button { /* Clase para los nuevos botones de acción */
+            background-color: #FF5722; /* Naranja para los botones de acción */
             color: white;
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px; /* Espacio entre botones */
+            display: inline-block; /* Para que estén uno al lado del otro si hay varios */
         }
-        #data-form-container button:hover {
+        #data-input-container .action-button:hover {
             background-color: #E64A19;
         }
         
@@ -78,127 +83,125 @@
         #cards-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px; /* Reducido el espacio para mejorar la impresión */
+            gap: 20px; 
             justify-content: center;
             padding-top: 20px;
-            /* El contenedor debe estar oculto por defecto */
-            display: none; 
+            display: none; /* Oculto por defecto */
         }
 
         /* 5. Estilo de Cada Cartón */
         .bingo-card {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            border: 5px solid #4CAF50; /* Borde principal verde */
+            border: 5px solid #4CAF50; 
             padding: 0;
             background-color: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 350px; /* Reducido ligeramente para la vista previa */
+            width: 350px; 
         }
         .bingo-header {
             font-size: 24px;
             font-weight: bold;
             color: white;
-            background-color: #388E3C; /* Verde más oscuro para las letras */
+            background-color: #388E3C; 
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .bingo-cell {
-            width: 70px; /* Ajustado para el nuevo ancho de 350px */
+            width: 70px; 
             height: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
             border: 1px solid #ddd;
-            font-size: 24px; /* Ajustado el tamaño de fuente para los números */
+            font-size: 24px; 
             font-weight: bold;
         }
         
-        /* NUEVO: Estilo para la celda central "Turystar" */
+        /* Estilo para la celda central "Turystar" */
         .center-cell {
-            background-color: #FFEB3B; 
             font-weight: bold;
-            font-size: 12px; /* Más pequeño para que quepa bien */
+            font-size: 12px; 
             color: #333;
-            /* Diseño Redondo */
             border-radius: 50%;
             background-color: #FFEB3B;
-            width: 70%; /* Para que el fondo amarillo solo afecte el círculo */
+            width: 70%; 
             height: 70%;
             padding: 5px;
-            line-height: 1.2; /* Ajuste de línea */
+            line-height: 1.2; 
             border: 2px solid #FFC107;
             box-sizing: border-box;
+            display: flex; /* Asegura que el contenido se centre vertical y horizontalmente */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
-        /* 6. Estilo para la impresión: PARA 6 CARTONES POR PÁGINA (A4/Carta) */
+        /* 6. Estilo para la impresión: 6 CARTONES POR PÁGINA (A4/CARTA) */
         @media print {
             body { 
                 background-image: none; 
                 padding: 0; 
                 margin: 0;
                 display: block;
-                /* Usar el tamaño de fuente más pequeño para maximizar */
                 font-size: 10px; 
             }
             
             /* Oculta lo innecesario */
-            header, #data-form-container, .print-button { 
+            header, #data-input-container, #print-button-display { /* Oculta el contenedor de entrada y el botón de imprimir en pantalla */
                 display: none; 
             }
             
             #cards-container { 
                 gap: 0; 
-                justify-content: space-around; /* Distribución uniforme */
+                justify-content: space-between; /* Distribución uniforme con espacio entre ellos */
                 align-items: flex-start;
-                padding: 5mm; /* Margen para impresión */
+                padding: 5mm 2mm; /* Margen para impresión, ajustado horizontalmente */
                 display: flex; 
+                width: 100%; /* Ocupa todo el ancho disponible */
+                height: 280mm; /* Intenta ocupar casi toda la altura de A4 */
+                box-sizing: border-box;
             }
             
             .bingo-card { 
-                /* 32% permite 3 en una fila con márgenes pequeños */
-                width: 32%; 
-                margin: 5px 0.5%; /* Espacio mínimo entre cartones */
+                /* Calcula el ancho para 3 cartones en una fila con espacio */
+                width: 31%; /* Reducido un poco para mayor margen */
+                height: auto; /* Permite que la altura se ajuste al contenido */
+                margin: 5px 0.5%; /* Margen vertical y horizontal mínimo */
                 border-color: #000; 
                 box-shadow: none; 
-                page-break-inside: avoid;
+                page-break-inside: avoid; /* Evita que el cartón se parta en dos páginas */
+                
+                /* Ajustes de grid para impresión */
+                grid-template-columns: repeat(5, 1fr);
+                grid-auto-rows: minmax(auto, 1fr); /* Las filas se ajustan automáticamente */
             }
             
             .bingo-header { 
                 background-color: #ccc !important; 
                 color: #000 !important; 
-                font-size: 12px;
-                height: 18px; /* Ajustado para ser más pequeño */
+                font-size: 11px; /* Ajuste para impresión */
+                height: 16px; 
             }
             
             .bingo-cell { 
                 border-color: #000; 
                 width: auto; 
-                height: 25px; /* Altura de celda ajustada para 6 cartones */
-                font-size: 12px; 
-            }
-            
-            /* Estilo específico para el centro del cartón en la impresión */
-            .bingo-cell:nth-child(13) { 
-                /* Asegura que la celda N no se expanda por el contenido */
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                height: 22px; /* Altura de celda ajustada para 6 cartones en A4 */
+                font-size: 11px; 
             }
             
             .center-cell { 
-                /* Estilo de impresión más simple y legible */
                 background-color: #eee !important; 
                 color: #333 !important;
                 border: 1px solid #000 !important;
-                width: 80% !important; 
-                height: 80% !important;
-                font-size: 10px !important; /* Fuente muy pequeña */
+                width: 70% !important; 
+                height: 70% !important;
+                font-size: 9px !important; 
                 line-height: 1.1 !important;
-                /* El salto de línea dentro de "Turystar" ayuda a que quepa */
             }
         }
     </style>
@@ -211,38 +214,24 @@
         <p>Genera tus cartones únicos de 75 bolas</p>
     </header>
 
-    <div id="data-form-container">
-        <form 
-            id="data-form"
-            name="contacto-bingo"
-            action="https://docs.google.com/forms/d/e/1FAIpQLScyBf0N8Gq3LwB5h0vWv9g1nL3eKz_u-J-P1yZ1Y9p-G-Q/formResponse" 
-            method="POST" 
-            target="_blank" 
-            onsubmit="return submitFormAndGenerate(event)"
-        >
-            <p style="font-size: 0.9em; text-align: center; font-weight: bold;">
-                Introduce tus datos para generar e imprimir tus cartones.
-            </p>
-            
-            <input type="text" name="entry.888746653" id="nombre" placeholder="Nombre y Apellido" required><br>
-
-            <input type="number" name="entry.2045620958" id="cantidad" placeholder="Cantidad de Cartones (Máx 15)" value="6" min="1" max="15" required>
-            
-            <button type="submit" id="generate-button">Generar Cartones y Registrar Datos</button>
-            <p style="font-size: 0.8em; color: #FF5722; margin-top: -10px; text-align: center;">
-                *El registro se abre en una nueva pestaña.
-            </p>
-        </form>
+    <div id="data-input-container">
+        <p style="font-size: 0.9em; text-align: center; font-weight: bold;">
+            Introduce tus datos para generar e imprimir tus cartones.
+        </p>
+        
+        <input type="text" id="nombre" placeholder="Nombre y Apellido" required><br>
+        <input type="number" id="cantidad" placeholder="Cantidad de Cartones (Máx 15)" value="6" min="1" max="15" required>
+        
+        <button type="button" class="action-button" onclick="generateAndDisplayCards()">Generar Cartones</button>
+        
+        <div id="print-button-display" style="display: none; margin-top: 15px;">
+            <button type="button" class="action-button" onclick="window.print()">Imprimir Cartones</button>
+        </div>
     </div>
     
     <div id="cards-container">
     </div>
     
-    <button type="button" onclick="window.print()" class="print-button" 
-            style="display: none; background-color: #007bff; margin-top: 20px; padding: 10px 20px; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em;">
-        Imprimir Cartones
-    </button>
-
     <script>
         // --- Lógica del Generador de Bingo (Mantenida) ---
 
@@ -285,17 +274,15 @@
                     cellWrapper.classList.add('bingo-cell');
 
                     if (j === 2 && i === 2) { 
-                        // Casilla central libre - Contenido en dos líneas para mejor ajuste
                         const content = document.createElement('div');
                         content.classList.add('center-cell');
-                        content.innerHTML = "Tury<br>Star"; // Usamos <br> para el salto de línea
+                        content.innerHTML = "Tury<br>Star"; 
                         cellWrapper.appendChild(content);
                     } else {
-                        // Lógica para tomar los números de las columnas N (4 números) y otras (5 números)
                         let number;
-                        if (j === 2) { // Columna N
+                        if (j === 2) { 
                             number = columns[columnKeys[j]][(i < 2) ? i : i - 1];
-                        } else { // Otras columnas (B, I, G, O)
+                        } else { 
                             number = columns[columnKeys[j]][i];
                         }
                         cellWrapper.textContent = number;
@@ -306,40 +293,45 @@
             return cardElement; 
         }
 
-        // --- Lógica del Formulario y Despliegue ---
+        // --- Lógica de Interfaz y Eventos ---
 
-        function submitFormAndGenerate(event) {
-            event.preventDefault(); 
-            
-            const form = document.getElementById('data-form');
+        function generateAndDisplayCards() {
+            const nombre = document.getElementById('nombre');
+            const cantidad = document.getElementById('cantidad');
             const container = document.getElementById('cards-container');
-            const cantidad = parseInt(document.getElementById('cantidad').value);
             
-            // 1. Validar el formulario usando la validación HTML5
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return false;
+            // Validar la entrada de usuario
+            if (!nombre.value.trim()) {
+                alert('Por favor, introduce tu Nombre y Apellido.');
+                nombre.focus();
+                return;
+            }
+            if (parseInt(cantidad.value) < 1 || parseInt(cantidad.value) > 15 || isNaN(parseInt(cantidad.value))) {
+                alert('Por favor, introduce una cantidad de cartones válida entre 1 y 15.');
+                cantidad.focus();
+                return;
             }
 
-            // 2. Enviar los datos a Google Forms (se abre en una nueva pestaña)
-            form.submit();
-
-            // 3. Generar y mostrar los cartones en esta pestaña
+            // Generar y mostrar los cartones
             container.innerHTML = ''; 
-            for (let i = 0; i < cantidad; i++) {
+            for (let i = 0; i < parseInt(cantidad.value); i++) {
                 const newCard = generateSingleCard();
                 container.appendChild(newCard);
             }
             
-            // 4. Cambiar el estado de la página (Ocultar Formulario y Mostrar Cartones/Botón Imprimir)
-            document.getElementById('data-form-container').style.display = 'none';
+            // Ocultar la entrada de datos y mostrar los cartones y el botón de imprimir
+            document.getElementById('data-input-container').style.display = 'none';
             container.style.display = 'flex';
-            document.querySelector('.print-button').style.display = 'block';
+            document.getElementById('print-button-display').style.display = 'block';
             
-            alert('¡Cartones generados con éxito! Los datos de registro se han enviado en una nueva pestaña.');
-
-            return false;
+            alert('¡Cartones generados con éxito! Ahora puedes imprimirlos.');
         }
+
+        // Si quieres que el botón "Generar" también abra la ventana de impresión
+        // function generateAndPrintCards() {
+        //     generateAndDisplayCards(); // Genera los cartones primero
+        //     window.print(); // Luego abre la ventana de impresión
+        // }
     </script>
 </body>
 </html>
