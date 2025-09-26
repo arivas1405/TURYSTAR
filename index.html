@@ -32,10 +32,11 @@
         
         /* Estilo para el Logo */
         header img {
+            /* ¡CORRECCIÓN A LA RUTA DEL LOGO! (Asegúrate de que este archivo exista en tu repo) */
             max-width: 150px; 
             height: auto;
             margin-bottom: 10px;
-            border-radius: 50%; /* Para el efecto circular del logo */
+            border-radius: 50%; 
         }
 
         header h1 {
@@ -44,7 +45,7 @@
             letter-spacing: 2px;
         }
         
-        /* 3. Formulario de Datos */
+        /* 3. Formulario de Datos Simplificado */
         #data-form-container { 
             background-color: #ffffff;
             padding: 30px;
@@ -77,10 +78,10 @@
         #cards-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px; 
+            gap: 20px; /* Reducido el espacio para mejorar la impresión */
             justify-content: center;
             padding-top: 20px;
-            /* ¡IMPORTANTE! El contenedor debe estar oculto por defecto */
+            /* El contenedor debe estar oculto por defecto */
             display: none; 
         }
 
@@ -92,7 +93,7 @@
             padding: 0;
             background-color: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 420px; 
+            width: 350px; /* Reducido ligeramente para la vista previa */
         }
         .bingo-header {
             font-size: 24px;
@@ -105,31 +106,45 @@
             align-items: center;
         }
         .bingo-cell {
-            width: 80px;
-            height: 80px;
+            width: 70px; /* Ajustado para el nuevo ancho de 350px */
+            height: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
             border: 1px solid #ddd;
-            font-size: 28px;
+            font-size: 24px; /* Ajustado el tamaño de fuente para los números */
             font-weight: bold;
         }
-        .center-cell {
-            background-color: #FFEB3B; /* Amarillo brillante para Turystar */
-            font-weight: 900;
-            font-size: 16px;
-            color: #333;
-        }
         
-        /* 6. Estilo para la impresión: PARA 6 CARTONES POR PÁGINA */
+        /* NUEVO: Estilo para la celda central "Turystar" */
+        .center-cell {
+            background-color: #FFEB3B; 
+            font-weight: bold;
+            font-size: 12px; /* Más pequeño para que quepa bien */
+            color: #333;
+            /* Diseño Redondo */
+            border-radius: 50%;
+            background-color: #FFEB3B;
+            width: 70%; /* Para que el fondo amarillo solo afecte el círculo */
+            height: 70%;
+            padding: 5px;
+            line-height: 1.2; /* Ajuste de línea */
+            border: 2px solid #FFC107;
+            box-sizing: border-box;
+        }
+
+        /* 6. Estilo para la impresión: PARA 6 CARTONES POR PÁGINA (A4/Carta) */
         @media print {
             body { 
                 background-image: none; 
                 padding: 0; 
                 margin: 0;
                 display: block;
+                /* Usar el tamaño de fuente más pequeño para maximizar */
+                font-size: 10px; 
             }
+            
             /* Oculta lo innecesario */
             header, #data-form-container, .print-button { 
                 display: none; 
@@ -137,42 +152,60 @@
             
             #cards-container { 
                 gap: 0; 
-                justify-content: flex-start; 
-                padding: 10px;
+                justify-content: space-around; /* Distribución uniforme */
+                align-items: flex-start;
+                padding: 5mm; /* Margen para impresión */
                 display: flex; 
             }
             
             .bingo-card { 
-                width: 30%; /* 3 cartones por fila */
-                float: left; 
-                margin: 10px 1.5%; 
+                /* 32% permite 3 en una fila con márgenes pequeños */
+                width: 32%; 
+                margin: 5px 0.5%; /* Espacio mínimo entre cartones */
                 border-color: #000; 
                 box-shadow: none; 
                 page-break-inside: avoid;
             }
             
-            .bingo-cell { 
-                border-color: #000; 
-                width: auto; 
-                height: 35px; 
-                font-size: 16px; 
-            }
-            
             .bingo-header { 
                 background-color: #ccc !important; 
                 color: #000 !important; 
-                font-size: 16px;
-                height: 25px;
+                font-size: 12px;
+                height: 18px; /* Ajustado para ser más pequeño */
             }
+            
+            .bingo-cell { 
+                border-color: #000; 
+                width: auto; 
+                height: 25px; /* Altura de celda ajustada para 6 cartones */
+                font-size: 12px; 
+            }
+            
+            /* Estilo específico para el centro del cartón en la impresión */
+            .bingo-cell:nth-child(13) { 
+                /* Asegura que la celda N no se expanda por el contenido */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
             .center-cell { 
+                /* Estilo de impresión más simple y legible */
                 background-color: #eee !important; 
+                color: #333 !important;
+                border: 1px solid #000 !important;
+                width: 80% !important; 
+                height: 80% !important;
+                font-size: 10px !important; /* Fuente muy pequeña */
+                line-height: 1.1 !important;
+                /* El salto de línea dentro de "Turystar" ayuda a que quepa */
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="turystar-bingo-logo.png" alt="Logo Turystar Bingo Online">
+        <img src="1758902644464.jpg" alt="Logo Turystar Bingo Online">
         
         <h1>BINGO ONLINE TURYSTAR</h1>
         <p>Genera tus cartones únicos de 75 bolas</p>
@@ -187,38 +220,31 @@
             target="_blank" 
             onsubmit="return submitFormAndGenerate(event)"
         >
+            <p style="font-size: 0.9em; text-align: center; font-weight: bold;">
+                Introduce tus datos para generar e imprimir tus cartones.
+            </p>
             
             <input type="text" name="entry.888746653" id="nombre" placeholder="Nombre y Apellido" required><br>
 
-            <input 
-                type="tel" 
-                name="entry.1764627196" 
-                id="telefono" 
-                placeholder="Número de Teléfono (11 dígitos)" 
-                required
-                maxlength="11"
-                minlength="11"
-                pattern="[0-9]{11}"
-                title="Debe ingresar exactamente 11 dígitos (Ej: 04121234567)"
-            >
-            <p style="font-size: 0.8em; color: gray; margin-top: -10px;">Debe contener 11 dígitos numéricos.</p>
-
             <input type="number" name="entry.2045620958" id="cantidad" placeholder="Cantidad de Cartones (Máx 15)" value="6" min="1" max="15" required>
             
-            <button type="submit">Generar Cartones y Registrar Datos</button>
+            <button type="submit" id="generate-button">Generar Cartones y Registrar Datos</button>
+            <p style="font-size: 0.8em; color: #FF5722; margin-top: -10px; text-align: center;">
+                *El registro se abre en una nueva pestaña.
+            </p>
         </form>
     </div>
     
     <div id="cards-container">
-        </div>
+    </div>
     
     <button type="button" onclick="window.print()" class="print-button" 
-            style="display: none; background-color: #007bff; margin-top: 20px; padding: 10px 20px; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            style="display: none; background-color: #007bff; margin-top: 20px; padding: 10px 20px; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em;">
         Imprimir Cartones
     </button>
 
     <script>
-        // --- Lógica del Generador de Bingo ---
+        // --- Lógica del Generador de Bingo (Mantenida) ---
 
         function getRandomNumbers(min, max, count) {
             const numbers = [];
@@ -246,7 +272,7 @@
             const columns = {
                 B: getRandomNumbers(1, 15, 5),
                 I: getRandomNumbers(16, 30, 5),
-                N: getRandomNumbers(31, 45, 4), // 4 números porque el centro es libre
+                N: getRandomNumbers(31, 45, 4), 
                 G: getRandomNumbers(46, 60, 5),
                 O: getRandomNumbers(61, 75, 5)
             };
@@ -255,13 +281,15 @@
             
             for (let i = 0; i < 5; i++) { 
                 for (let j = 0; j < 5; j++) { 
-                    const cell = document.createElement('div');
-                    cell.classList.add('bingo-cell');
-                    
+                    const cellWrapper = document.createElement('div');
+                    cellWrapper.classList.add('bingo-cell');
+
                     if (j === 2 && i === 2) { 
-                        // Casilla central libre
-                        cell.textContent = "Turystar";
-                        cell.classList.add('center-cell');
+                        // Casilla central libre - Contenido en dos líneas para mejor ajuste
+                        const content = document.createElement('div');
+                        content.classList.add('center-cell');
+                        content.innerHTML = "Tury<br>Star"; // Usamos <br> para el salto de línea
+                        cellWrapper.appendChild(content);
                     } else {
                         // Lógica para tomar los números de las columnas N (4 números) y otras (5 números)
                         let number;
@@ -270,9 +298,9 @@
                         } else { // Otras columnas (B, I, G, O)
                             number = columns[columnKeys[j]][i];
                         }
-                        cell.textContent = number;
+                        cellWrapper.textContent = number;
                     }
-                    cardElement.appendChild(cell);
+                    cardElement.appendChild(cellWrapper);
                 }
             }
             return cardElement; 
@@ -293,8 +321,7 @@
                 return false;
             }
 
-            // 2. Enviar los datos a Google Forms (se abre en una nueva pestaña gracias a target="_blank")
-            // Esto solo se ejecuta si el formulario es válido
+            // 2. Enviar los datos a Google Forms (se abre en una nueva pestaña)
             form.submit();
 
             // 3. Generar y mostrar los cartones en esta pestaña
@@ -309,13 +336,10 @@
             container.style.display = 'flex';
             document.querySelector('.print-button').style.display = 'block';
             
-            // Opcional: Notificar al usuario 
-            alert('¡Cartones generados con éxito! Sus datos han sido registrados en una nueva pestaña.');
+            alert('¡Cartones generados con éxito! Los datos de registro se han enviado en una nueva pestaña.');
 
             return false;
         }
-
-        // 5. El contenedor de cartones está oculto por CSS, no se genera nada al inicio.
     </script>
 </body>
 </html>
