@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Online Turystar - Generador de Cartones</title>
+    <style>
+        /* 1. Estilos Globales y Fondo */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            background-image: url('https://bingomaker.com/images/bingo-ball-pattern.jpg'); /* Imagen de ejemplo, puedes cambiarla */
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 2. Cabecera y Título */
+        header {
+            background-color: #4CAF50; /* Verde vibrante */
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+        
+        /* 3. Formulario de Datos */
+        #data-form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        #data-form input, #data-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Asegura que el padding no cambie el ancho */
+        }
+        #data-form button {
+            background-color: #FF5722; /* Naranja para el botón de acción */
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #data-form button:hover {
+            background-color: #E64A19;
+        }
+
+        /* 4. Contenedor de Cartones */
+        #cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px; /* Espacio entre los cartones */
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        /* 5. Estilo de Cada Cartón */
+        .bingo-card {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            border: 5px solid #4CAF50; /* Borde principal verde */
+            padding: 0;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 420px; /* Ancho fijo para cada cartón */
+        }
+        .bingo-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background-color: #388E3C; /* Verde más oscuro para las letras */
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .bingo-cell {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .center-cell {
+            background-color: #FFEB3B; /* Amarillo brillante para Turystar */
+            font-weight: 900;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        /* 6. Estilo para la impresión */
+        @media print {
+            body { background-image: none; padding: 0; }
+            header, #data-form { display: none; } /* Oculta el formulario y cabecera al imprimir */
+            #cards-container { gap: 10px; page-break-before: always; } /* Fuerza salto de página si es necesario */
+            .bingo-card { margin-bottom: 10px; border-color: #000; box-shadow: none; width: 100%; max-width: 200mm; }
+            .bingo-cell { border-color: #000; width: auto; height: 50px; font-size: 20px; }
+            .bingo-header { background-color: #ccc !important; color: #000 !important; }
+            .center-cell { background-color: #eee !important; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BINGO ONLINE TURYSTAR</h1>
+        <p>Genera tus cartones únicos de 75 bolas</p>
+    </header>
+
+    <div id="data-form">
+        <input type="text" id="nombre" placeholder="Tu Nombre" required>
+        <input type="tel" id="telefono" placeholder="Tu Número de Teléfono (Ej: 04121234567)" required>
+        <input type="number" id="cantidad" placeholder="Cantidad de Cartones (Máx 10)" value="1" min="1" max="10" required>
+        <button onclick="submitFormAndGenerate()">Generar Cartones</button>
+        <button onclick="window.print()" style="background-color: #007bff; margin-top: 10px;">Imprimir Cartones</button>
+    </div>
+
+    <div id="cards-container">
+        </div>
+
+    <script>
+        // --- Lógica del Generador de Bingo ---
+
+        // Función para obtener 'count' números aleatorios únicos de un rango
+        function getRandomNumbers(min, max, count) {
+            const numbers = [];
+            while (numbers.length < count) {
+                const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            return numbers.sort((a, b) => a - b);
+        }
+
+        // Función PRINCIPAL para generar un ÚNICO cartón
+        function generateSingleCard() {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('bingo-card');
+
+            // 1. Añadir encabezados BINGO
+            const headers = ['B', 'I', 'N', 'G', 'O'];
+            headers.forEach(header => {
+                const h = document.createElement('div');
+                h.classList.add('bingo-header');
+                h.textContent = header;
+                cardElement.appendChild(h);
+            });
+
+            // 2. Generar números para cada columna
+            const columns = {
+                B: getRandomNumbers(1, 15, 5),
+                I: getRandomNumbers(16, 30, 5),
+                N: getRandomNumbers(31, 45, 5),
+                G: getRandomNumbers(46, 60, 5),
+                O: getRandomNumbers(61, 75, 5)
+            };
+
+            const columnKeys = ['B', 'I', 'N', 'G', 'O'];
+            let cellIndex = 0;
+            
+            // 3. Crear las 25 celdas (5 filas x 5 columnas)
+            for (let i = 0; i < 5; i++) { // Bucle para las 5 filas
+                for (let j = 0; j < 5; j++) { // Bucle para las 5 columnas
+                    const cell = document.createElement('div');
+                    cell.classList.add('bingo-cell');
+                    
+                    if (j === 2 && i === 2) { // La celda del centro (N3)
+                        cell.textContent = "Turystar";
+                        cell.classList.add('center-cell');
+                    } else {
+                        const numbers = columns[columnKeys[j]];
+                        const number = numbers[i];
+                        cell.textContent = number;
+                    }
+                    cardElement.appendChild(cell);
+                    cellIndex++;
+                }
+            }
+            return cardElement; // Devolver el cartón completo
+        }
+
+        // --- Lógica del Formulario y Generación Múltiple ---
+
+        function submitFormAndGenerate() {
+            const nombre = document.getElementById('nombre').value;
+            const telefono = document.getElementById('telefono').value;
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const container = document.getElementById('cards-container');
+            container.innerHTML = ''; // Limpiar cartones anteriores
+
+            if (!nombre || !telefono || isNaN(cantidad) || cantidad < 1 || cantidad > 10) {
+                alert('Por favor, rellena tu nombre, teléfono y la cantidad de cartones (máximo 10) correctamente.');
+                return;
+            }
+
+            // Aquí se llamaría a la función para guardar la data (Paso 2)
+            sendDataToExternalSheet(nombre, telefono, cantidad); 
+
+            // Generar la cantidad de cartones solicitada
+            for (let i = 0; i < cantidad; i++) {
+                const newCard = generateSingleCard();
+                container.appendChild(newCard);
+            }
+        }
+
+        // --- Función de Base de Datos (Paso 2) ---
+
+        function sendDataToExternalSheet(nombre, telefono, cantidad) {
+            // ESTA FUNCIÓN ES CLAVE PARA TU BASE DE DATOS.
+            // POR AHORA SOLO MOSTRAREMOS UN MENSAJE.
+            console.log(`Datos capturados: Nombre: ${nombre}, Teléfono: ${telefono}, Cantidad: ${cantidad}`);
+            
+            // Aquí iría el código para enviar los datos al servicio externo
+            // (Ej. Google Forms, Formspree o Sheet Monkey).
+            // Lo haremos en el Paso 2, una vez publicada la web.
+        }
+
+    </script>
+</body>
+</html>
