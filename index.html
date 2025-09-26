@@ -28,10 +28,13 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
             text-align: center;
+            width: 90%; /* Ajuste para móviles */
+            max-width: 500px;
         }
         
         /* Estilo para el Logo */
         header img {
+            /* RUTA CORREGIDA: Usando el nombre de archivo de tu repositorio de GitHub */
             max-width: 150px; 
             height: auto;
             margin-bottom: 10px;
@@ -44,27 +47,28 @@
             letter-spacing: 2px;
         }
         
-        /* 3. Contenedor de Entrada de Datos */
-        #data-input-container { /* Renombrado de data-form-container a data-input-container */
+        /* 3. Contenedor de Entrada de Datos (SIN FORMULARIO DE ENVÍO) */
+        #data-input-container { 
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            width: 90%;
             max-width: 400px;
             margin-bottom: 20px;
-            text-align: center; /* Centrar elementos internos */
+            text-align: center;
         }
         #data-input-container input {
-            width: calc(100% - 20px); /* Ajuste para padding */
+            width: calc(100% - 20px); 
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box; 
         }
-        #data-input-container .action-button { /* Clase para los nuevos botones de acción */
-            background-color: #FF5722; /* Naranja para los botones de acción */
+        /* Estilos para los botones de acción (Generar/Imprimir) */
+        .action-button { 
+            background-color: #FF5722; 
             color: white;
             font-size: 1.1em;
             cursor: pointer;
@@ -72,10 +76,10 @@
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
-            margin: 5px; /* Espacio entre botones */
-            display: inline-block; /* Para que estén uno al lado del otro si hay varios */
+            margin: 5px; 
+            display: inline-block;
         }
-        #data-input-container .action-button:hover {
+        .action-button:hover {
             background-color: #E64A19;
         }
         
@@ -87,6 +91,8 @@
             justify-content: center;
             padding-top: 20px;
             display: none; /* Oculto por defecto */
+            width: 95%; /* Usar casi todo el ancho para la vista previa */
+            max-width: 1000px;
         }
 
         /* 5. Estilo de Cada Cartón */
@@ -97,7 +103,7 @@
             padding: 0;
             background-color: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 350px; 
+            width: 300px; /* Tamaño para vista previa */
         }
         .bingo-header {
             font-size: 24px;
@@ -110,8 +116,6 @@
             align-items: center;
         }
         .bingo-cell {
-            width: 70px; 
-            height: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -119,9 +123,12 @@
             border: 1px solid #ddd;
             font-size: 24px; 
             font-weight: bold;
+            /* Se establece un tamaño base, pero el grid lo ajusta */
+            padding: 5px;
+            min-height: 50px; 
         }
         
-        /* Estilo para la celda central "Turystar" */
+        /* Estilo para la celda central "Turystar" (Redondo y pequeño) */
         .center-cell {
             font-weight: bold;
             font-size: 12px; 
@@ -134,7 +141,7 @@
             line-height: 1.2; 
             border: 2px solid #FFC107;
             box-sizing: border-box;
-            display: flex; /* Asegura que el contenido se centre vertical y horizontalmente */
+            display: flex; 
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -151,57 +158,57 @@
             }
             
             /* Oculta lo innecesario */
-            header, #data-input-container, #print-button-display { /* Oculta el contenedor de entrada y el botón de imprimir en pantalla */
+            header, #data-input-container, #print-button-display { 
                 display: none; 
             }
             
             #cards-container { 
                 gap: 0; 
-                justify-content: space-between; /* Distribución uniforme con espacio entre ellos */
+                justify-content: space-around; /* Distribución uniforme */
                 align-items: flex-start;
-                padding: 5mm 2mm; /* Margen para impresión, ajustado horizontalmente */
+                padding: 5mm; 
                 display: flex; 
-                width: 100%; /* Ocupa todo el ancho disponible */
-                height: 280mm; /* Intenta ocupar casi toda la altura de A4 */
+                width: 100%; 
+                height: auto; 
                 box-sizing: border-box;
             }
             
             .bingo-card { 
-                /* Calcula el ancho para 3 cartones en una fila con espacio */
-                width: 31%; /* Reducido un poco para mayor margen */
-                height: auto; /* Permite que la altura se ajuste al contenido */
-                margin: 5px 0.5%; /* Margen vertical y horizontal mínimo */
+                /* 31% permite 3 en una fila con márgenes pequeños para maximizar */
+                width: 31%; 
+                height: 120mm; /* Altura forzada para ayudar al ajuste de 2 filas en A4/Carta */
+                margin: 5px 0.5%; 
                 border-color: #000; 
                 box-shadow: none; 
-                page-break-inside: avoid; /* Evita que el cartón se parta en dos páginas */
+                page-break-inside: avoid; 
                 
-                /* Ajustes de grid para impresión */
                 grid-template-columns: repeat(5, 1fr);
-                grid-auto-rows: minmax(auto, 1fr); /* Las filas se ajustan automáticamente */
+                /* Asegura que las filas internas del cartón se repartan el espacio */
+                grid-auto-rows: 1fr; 
             }
             
             .bingo-header { 
                 background-color: #ccc !important; 
                 color: #000 !important; 
-                font-size: 11px; /* Ajuste para impresión */
-                height: 16px; 
+                font-size: 10px;
+                height: 15px; 
             }
             
             .bingo-cell { 
                 border-color: #000; 
                 width: auto; 
-                height: 22px; /* Altura de celda ajustada para 6 cartones en A4 */
-                font-size: 11px; 
+                /* Ya no se necesita forzar la altura aquí, el grid lo maneja */
+                font-size: 10px; 
+                padding: 1px;
             }
             
             .center-cell { 
                 background-color: #eee !important; 
                 color: #333 !important;
                 border: 1px solid #000 !important;
-                width: 70% !important; 
-                height: 70% !important;
-                font-size: 9px !important; 
-                line-height: 1.1 !important;
+                width: 80% !important; 
+                height: 80% !important;
+                font-size: 8px !important; /* Fuente muy pequeña para garantizar que quepa */
             }
         }
     </style>
@@ -223,17 +230,19 @@
         <input type="number" id="cantidad" placeholder="Cantidad de Cartones (Máx 15)" value="6" min="1" max="15" required>
         
         <button type="button" class="action-button" onclick="generateAndDisplayCards()">Generar Cartones</button>
-        
-        <div id="print-button-display" style="display: none; margin-top: 15px;">
-            <button type="button" class="action-button" onclick="window.print()">Imprimir Cartones</button>
-        </div>
     </div>
     
+    <button type="button" class="action-button" id="print-button-display" 
+        onclick="window.print()" 
+        style="display: none; background-color: #007bff; margin-top: 20px; font-size: 1.1em;">
+        Imprimir Cartones
+    </button>
+
     <div id="cards-container">
     </div>
     
     <script>
-        // --- Lógica del Generador de Bingo (Mantenida) ---
+        // --- Lógica del Generador de Bingo ---
 
         function getRandomNumbers(min, max, count) {
             const numbers = [];
@@ -274,15 +283,17 @@
                     cellWrapper.classList.add('bingo-cell');
 
                     if (j === 2 && i === 2) { 
+                        // Casilla central libre con diseño Tury Star
                         const content = document.createElement('div');
                         content.classList.add('center-cell');
                         content.innerHTML = "Tury<br>Star"; 
                         cellWrapper.appendChild(content);
                     } else {
+                        // Lógica para asignar los números
                         let number;
-                        if (j === 2) { 
+                        if (j === 2) { // Columna N
                             number = columns[columnKeys[j]][(i < 2) ? i : i - 1];
-                        } else { 
+                        } else { // Otras columnas (B, I, G, O)
                             number = columns[columnKeys[j]][i];
                         }
                         cellWrapper.textContent = number;
@@ -293,7 +304,7 @@
             return cardElement; 
         }
 
-        // --- Lógica de Interfaz y Eventos ---
+        // --- Lógica de Interfaz y Eventos (CORREGIDA) ---
 
         function generateAndDisplayCards() {
             const nombre = document.getElementById('nombre');
@@ -319,19 +330,15 @@
                 container.appendChild(newCard);
             }
             
-            // Ocultar la entrada de datos y mostrar los cartones y el botón de imprimir
-            document.getElementById('data-input-container').style.display = 'none';
-            container.style.display = 'flex';
-            document.getElementById('print-button-display').style.display = 'block';
+            // Mostrar Cartones y el Botón de Imprimir
+            document.getElementById('data-input-container').style.display = 'none'; // Oculta la entrada de datos
+            container.style.display = 'flex'; // Muestra el contenedor de cartones
+            
+            // SOLUCIÓN AL ERROR: Muestra el botón de imprimir
+            document.getElementById('print-button-display').style.display = 'block'; 
             
             alert('¡Cartones generados con éxito! Ahora puedes imprimirlos.');
         }
-
-        // Si quieres que el botón "Generar" también abra la ventana de impresión
-        // function generateAndPrintCards() {
-        //     generateAndDisplayCards(); // Genera los cartones primero
-        //     window.print(); // Luego abre la ventana de impresión
-        // }
     </script>
 </body>
 </html>
