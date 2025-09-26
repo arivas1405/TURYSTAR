@@ -28,11 +28,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
             text-align: center;
-            width: 90%; /* Ajuste para móviles */
+            width: 90%; 
             max-width: 500px;
         }
         
-        /* Estilo para el Logo */
         header img {
             /* RUTA CORREGIDA: Usando el nombre de archivo de tu repositorio de GitHub */
             max-width: 150px; 
@@ -47,7 +46,7 @@
             letter-spacing: 2px;
         }
         
-        /* 3. Contenedor de Entrada de Datos (SIN FORMULARIO DE ENVÍO) */
+        /* 3. Contenedor de Entrada de Datos */
         #data-input-container { 
             background-color: #ffffff;
             padding: 30px;
@@ -66,7 +65,6 @@
             border-radius: 5px;
             box-sizing: border-box; 
         }
-        /* Estilos para los botones de acción (Generar/Imprimir) */
         .action-button { 
             background-color: #FF5722; 
             color: white;
@@ -90,12 +88,12 @@
             gap: 20px; 
             justify-content: center;
             padding-top: 20px;
-            display: none; /* Oculto por defecto */
-            width: 95%; /* Usar casi todo el ancho para la vista previa */
+            display: none; 
+            width: 95%; 
             max-width: 1000px;
         }
 
-        /* 5. Estilo de Cada Cartón */
+        /* 5. Estilo de Cada Cartón (Vista Web) */
         .bingo-card {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -103,7 +101,7 @@
             padding: 0;
             background-color: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 300px; /* Tamaño para vista previa */
+            width: 300px; 
         }
         .bingo-header {
             font-size: 24px;
@@ -123,12 +121,11 @@
             border: 1px solid #ddd;
             font-size: 24px; 
             font-weight: bold;
-            /* Se establece un tamaño base, pero el grid lo ajusta */
             padding: 5px;
             min-height: 50px; 
         }
         
-        /* Estilo para la celda central "Turystar" (Redondo y pequeño) */
+        /* Estilo para la celda central "Turystar" */
         .center-cell {
             font-weight: bold;
             font-size: 12px; 
@@ -147,7 +144,7 @@
             text-align: center;
         }
 
-        /* 6. Estilo para la impresión: 6 CARTONES POR PÁGINA (A4/CARTA) */
+        /* 6. ESTILO PARA LA IMPRESIÓN (AJUSTE FINAL PARA 6 CARTONES EN A4/CARTA) */
         @media print {
             body { 
                 background-image: none; 
@@ -155,6 +152,13 @@
                 margin: 0;
                 display: block;
                 font-size: 10px; 
+                /* Forzamos el uso de grid para una distribución precisa */
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+                grid-template-rows: repeat(3, 1fr); /* 3 filas */
+                height: 100vh; /* Ocupa la altura de la página */
+                gap: 5mm; /* Espacio entre cartones */
+                padding: 5mm;
             }
             
             /* Oculta lo innecesario */
@@ -163,42 +167,34 @@
             }
             
             #cards-container { 
-                gap: 0; 
-                justify-content: space-around; /* Distribución uniforme */
-                align-items: flex-start;
-                padding: 5mm; 
-                display: flex; 
-                width: 100%; 
-                height: auto; 
-                box-sizing: border-box;
+                /* Se oculta el contenedor padre y usamos los hijos directamente en el body */
+                display: contents; 
             }
             
             .bingo-card { 
-                /* 31% permite 3 en una fila con márgenes pequeños para maximizar */
-                width: 31%; 
-                height: 120mm; /* Altura forzada para ayudar al ajuste de 2 filas en A4/Carta */
-                margin: 5px 0.5%; 
+                width: 100%; /* Ocupa el 100% de la columna del grid */
+                height: 100%; /* Ocupa el 100% de la fila del grid */
+                margin: 0; 
                 border-color: #000; 
                 box-shadow: none; 
                 page-break-inside: avoid; 
                 
+                /* Ajuste de GRID INTERNO del cartón */
                 grid-template-columns: repeat(5, 1fr);
-                /* Asegura que las filas internas del cartón se repartan el espacio */
                 grid-auto-rows: 1fr; 
             }
             
             .bingo-header { 
                 background-color: #ccc !important; 
                 color: #000 !important; 
-                font-size: 10px;
-                height: 15px; 
+                font-size: 14px; /* Aumentado el tamaño de la letra BINGO para mejor lectura */
+                height: auto; 
+                padding: 2px 0;
             }
             
             .bingo-cell { 
                 border-color: #000; 
-                width: auto; 
-                /* Ya no se necesita forzar la altura aquí, el grid lo maneja */
-                font-size: 10px; 
+                font-size: 14px; /* Aumentado el tamaño del número para mejor lectura */
                 padding: 1px;
             }
             
@@ -206,9 +202,14 @@
                 background-color: #eee !important; 
                 color: #333 !important;
                 border: 1px solid #000 !important;
-                width: 80% !important; 
-                height: 80% !important;
-                font-size: 8px !important; /* Fuente muy pequeña para garantizar que quepa */
+                width: 90% !important; /* Más grande */
+                height: 90% !important;
+                font-size: 10px !important; 
+            }
+
+            /* Aseguramos que solo los primeros 6 cartones se muestren en la primera página si se generan más */
+            .bingo-card:nth-child(n+7) {
+                display: none;
             }
         }
     </style>
@@ -242,7 +243,8 @@
     </div>
     
     <script>
-        // --- Lógica del Generador de Bingo ---
+        // Array para almacenar los hashes de los cartones generados en esta sesión
+        let generatedCardHashes = [];
 
         function getRandomNumbers(min, max, count) {
             const numbers = [];
@@ -255,18 +257,8 @@
             return numbers.sort((a, b) => a - b);
         }
 
-        function generateSingleCard() {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('bingo-card');
-
-            const headers = ['B', 'I', 'N', 'G', 'O'];
-            headers.forEach(header => {
-                const h = document.createElement('div');
-                h.classList.add('bingo-header');
-                h.textContent = header;
-                cardElement.appendChild(h);
-            });
-
+        // --- FUNCIÓN MEJORADA: Genera un cartón y devuelve sus números como un array plano ---
+        function generateCardData() {
             const columns = {
                 B: getRandomNumbers(1, 15, 5),
                 I: getRandomNumbers(16, 30, 5),
@@ -276,65 +268,120 @@
             };
 
             const columnKeys = ['B', 'I', 'N', 'G', 'O'];
+            let cardNumbers = [];
             
             for (let i = 0; i < 5; i++) { 
                 for (let j = 0; j < 5; j++) { 
-                    const cellWrapper = document.createElement('div');
-                    cellWrapper.classList.add('bingo-cell');
-
                     if (j === 2 && i === 2) { 
-                        // Casilla central libre con diseño Tury Star
-                        const content = document.createElement('div');
-                        content.classList.add('center-cell');
-                        content.innerHTML = "Tury<br>Star"; 
-                        cellWrapper.appendChild(content);
+                        cardNumbers.push(0); // Usamos 0 para representar el espacio libre
                     } else {
-                        // Lógica para asignar los números
                         let number;
-                        if (j === 2) { // Columna N
+                        if (j === 2) { 
                             number = columns[columnKeys[j]][(i < 2) ? i : i - 1];
-                        } else { // Otras columnas (B, I, G, O)
+                        } else { 
                             number = columns[columnKeys[j]][i];
                         }
-                        cellWrapper.textContent = number;
+                        cardNumbers.push(number);
                     }
-                    cardElement.appendChild(cellWrapper);
                 }
             }
-            return cardElement; 
+            // Devolvemos el array de 25 números, que es la huella digital del cartón
+            return cardNumbers;
         }
 
-        // --- Lógica de Interfaz y Eventos (CORREGIDA) ---
+        // --- FUNCIÓN DE VERIFICACIÓN Y RENDERIZADO DEL CARTÓN ---
+        function generateUniqueCard(container) {
+            let cardNumbers;
+            let cardHash;
+            let isUnique = false;
+            let attempts = 0;
+            const MAX_ATTEMPTS = 50; // Límite de intentos para evitar bucles infinitos
+
+            // Bucle para asegurar que el cartón es único
+            while (!isUnique && attempts < MAX_ATTEMPTS) {
+                cardNumbers = generateCardData();
+                cardHash = cardNumbers.join(','); // Creamos una 'huella digital' única del cartón
+                
+                if (!generatedCardHashes.includes(cardHash)) {
+                    generatedCardHashes.push(cardHash);
+                    isUnique = true;
+                }
+                attempts++;
+            }
+
+            if (!isUnique) {
+                console.error("No se pudo generar un cartón único después de 50 intentos.");
+                // Podrías devolver un cartón con un mensaje de error si fuera necesario
+                return; 
+            }
+
+            // Crear el elemento HTML del cartón
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('bingo-card');
+
+            // 1. Headers (B-I-N-G-O)
+            const headers = ['B', 'I', 'N', 'G', 'O'];
+            headers.forEach(header => {
+                const h = document.createElement('div');
+                h.classList.add('bingo-header');
+                h.textContent = header;
+                cardElement.appendChild(h);
+            });
+
+            // 2. Celdas con números
+            for (let i = 0; i < 25; i++) {
+                const number = cardNumbers[i];
+                const cellWrapper = document.createElement('div');
+                cellWrapper.classList.add('bingo-cell');
+
+                if (number === 0) { // El espacio libre (el 0 que usamos como marcador)
+                    const content = document.createElement('div');
+                    content.classList.add('center-cell');
+                    content.innerHTML = "Tury<br>Star"; 
+                    cellWrapper.appendChild(content);
+                } else {
+                    cellWrapper.textContent = number;
+                }
+                cardElement.appendChild(cellWrapper);
+            }
+
+            container.appendChild(cardElement);
+        }
+
+        // --- Lógica de Interfaz y Eventos (FINAL) ---
 
         function generateAndDisplayCards() {
             const nombre = document.getElementById('nombre');
             const cantidad = document.getElementById('cantidad');
             const container = document.getElementById('cards-container');
             
-            // Validar la entrada de usuario
+            // 1. Validación
             if (!nombre.value.trim()) {
                 alert('Por favor, introduce tu Nombre y Apellido.');
                 nombre.focus();
                 return;
             }
-            if (parseInt(cantidad.value) < 1 || parseInt(cantidad.value) > 15 || isNaN(parseInt(cantidad.value))) {
+            const count = parseInt(cantidad.value);
+            if (count < 1 || count > 15 || isNaN(count)) {
                 alert('Por favor, introduce una cantidad de cartones válida entre 1 y 15.');
                 cantidad.focus();
                 return;
             }
 
-            // Generar y mostrar los cartones
+            // 2. Resetear hashes para la nueva generación
             container.innerHTML = ''; 
-            for (let i = 0; i < parseInt(cantidad.value); i++) {
-                const newCard = generateSingleCard();
-                container.appendChild(newCard);
+            generatedCardHashes = []; 
+            
+            // 3. Generar cartones ÚNICOS
+            for (let i = 0; i < count; i++) {
+                generateUniqueCard(container);
             }
             
-            // Mostrar Cartones y el Botón de Imprimir
-            document.getElementById('data-input-container').style.display = 'none'; // Oculta la entrada de datos
-            container.style.display = 'flex'; // Muestra el contenedor de cartones
-            
-            // SOLUCIÓN AL ERROR: Muestra el botón de imprimir
+            // 4. Mostrar Cartones y el Botón de Imprimir
+            document.getElementById('data-input-container').style.display = 'none';
+            // Para la impresión, es crucial que los cartones no estén envueltos en un flex si usamos el grid en el body
+            // Por eso, la impresión usa la técnica de 'display: contents' en el CSS.
+            container.style.display = 'flex'; 
             document.getElementById('print-button-display').style.display = 'block'; 
             
             alert('¡Cartones generados con éxito! Ahora puedes imprimirlos.');
